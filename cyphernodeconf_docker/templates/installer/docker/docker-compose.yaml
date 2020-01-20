@@ -22,10 +22,20 @@ services:
     networks:
       - cyphernodenet
       - cyphernodeappsnet
+    <% if ( docker_mode === 'swarm' ) { %>
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.io.cyphernode.core == true
+      restart_policy:
+        condition: "any"
+        delay: 1s
+      update_config:
+        parallelism: 1
+    <% } else { %>
     restart: always
-#    deploy:
-#      placement:
-#        constraints: [node.hostname==dev]
+    <% } %>
   <% } %>
 
   <% if ( features.indexOf('lightning') !== -1 && lightning_implementation === 'c-lightning' ) { %>
@@ -51,14 +61,24 @@ services:
       retries: 10
     networks:
       - cyphernodenet
-    restart: always
     <% if ( features.indexOf('tor') !== -1 ) { %>
     depends_on:
       - tor
     <% } %>
-#    deploy:  --lightning-dir=/.lightning
-#      placement:
-#        constraints: [node.hostname==dev]
+    <% if ( docker_mode === 'swarm' ) { %>
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.io.cyphernode.core == true
+      restart_policy:
+        condition: "any"
+        delay: 1s
+      update_config:
+        parallelism: 1
+    <% } else { %>
+    restart: always
+    <% } %>
   <% } %>
 
   <% if( bitcoin_mode === 'internal' ) { %>
@@ -84,14 +104,24 @@ services:
       retries: 10
     networks:
       - cyphernodenet
-    restart: always
     <% if ( features.indexOf('tor') !== -1 ) { %>
     depends_on:
       - tor
     <% } %>
-#    deploy:
-#      placement:
-#        constraints: [node.hostname==dev]
+    <% if ( docker_mode === 'swarm' ) { %>
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.io.cyphernode.core == true
+      restart_policy:
+        condition: "any"
+        delay: 1s
+      update_config:
+        parallelism: 1
+    <% } else { %>
+    restart: always
+    <% } %>
   <% } %>
 
   ##########################
@@ -141,10 +171,20 @@ services:
       <% } %>
     networks:
       - cyphernodenet
+    <% if ( docker_mode === 'swarm' ) { %>
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.io.cyphernode.core == true
+      restart_policy:
+        condition: "any"
+        delay: 1s
+      update_config:
+        parallelism: 1
+    <% } else { %>
     restart: always
-#    deploy:
-#      placement:
-#        constraints: [node.hostname==dev]
+    <% } %>
 
   ##########################
   # PROXYCRON              #
@@ -157,12 +197,22 @@ services:
       - "OTS_URL=proxy:8888/ots_backoffice"
     networks:
       - cyphernodenet
-    restart: always
     depends_on:
       - proxy
-#    deploy:
-#      placement:
-#        constraints: [node.hostname==dev]
+    <% if ( docker_mode === 'swarm' ) { %>
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.io.cyphernode.core == true
+      restart_policy:
+        condition: "any"
+        delay: 1s
+      update_config:
+        parallelism: 1
+    <% } else { %>
+    restart: always
+    <% } %>
 
   ##########################
   # BROKER                 #
@@ -173,10 +223,20 @@ services:
     networks:
       - cyphernodenet
       - cyphernodeappsnet
+    <% if ( docker_mode === 'swarm' ) { %>
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.io.cyphernode.core == true
+      restart_policy:
+        condition: "any"
+        delay: 1s
+      update_config:
+        parallelism: 1
+    <% } else { %>
     restart: always
-#    deploy:
-#      placement:
-#        constraints: [node.hostname==dev]
+    <% } %>
 
   ##########################
   # NOTIFIER               #
@@ -193,12 +253,22 @@ services:
     networks:
       - cyphernodenet
       - cyphernodeappsnet
-    restart: always
     depends_on:
       - broker
-#    deploy:
-#      placement:
-#        constraints: [node.hostname==dev]
+    <% if ( docker_mode === 'swarm' ) { %>
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.io.cyphernode.core == true
+      restart_policy:
+        condition: "any"
+        delay: 1s
+      update_config:
+        parallelism: 1
+    <% } else { %>
+    restart: always
+    <% } %>
 
   ##########################
   # PYCOIN                 #
@@ -216,10 +286,20 @@ services:
     <% } %>
     networks:
       - cyphernodenet
+    <% if ( docker_mode === 'swarm' ) { %>
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.io.cyphernode.core == true
+      restart_policy:
+        condition: "any"
+        delay: 1s
+      update_config:
+        parallelism: 1
+    <% } else { %>
     restart: always
-#    deploy:
-#      placement:
-#        constraints: [node.hostname==dev]
+    <% } %>
 
   <% if ( features.indexOf('otsclient') !== -1 ) { %>
   ##########################
@@ -245,10 +325,20 @@ services:
     command: $USER /script/startotsclient.sh
     networks:
       - cyphernodenet
+    <% if ( docker_mode === 'swarm' ) { %>
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.io.cyphernode.core == true
+      restart_policy:
+        condition: "any"
+        delay: 1s
+      update_config:
+        parallelism: 1
+    <% } else { %>
     restart: always
-#    deploy:
-#      placement:
-#        constraints: [node.hostname==dev]
+    <% } %>
   <% } %>
 
   ##########################
@@ -278,12 +368,22 @@ services:
     networks:
       - cyphernodenet
       - cyphernodeappsnet
-    restart: always
     depends_on:
       - proxy
-#    deploy:
-#      placement:
-#        constraints: [node.hostname==dev]
+    <% if ( docker_mode === 'swarm' ) { %>
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.io.cyphernode.core == true
+      restart_policy:
+        condition: "any"
+        delay: 1s
+      update_config:
+        parallelism: 1
+    <% } else { %>
+    restart: always
+    <% } %>
 
   ##########################
   # TRAEFIK                #
@@ -301,12 +401,22 @@ services:
       - "<%= traefik_datapath%>/htpasswd:/htpasswd/htpasswd:ro"
     networks:
       - cyphernodeappsnet
-    restart: always
     depends_on:
       - gatekeeper
-#    deploy:
-#      placement:
-#        constraints: [node.hostname==dev]
+    <% if ( docker_mode === 'swarm' ) { %>
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.io.cyphernode.infra == true
+      restart_policy:
+        condition: "any"
+        delay: 1s
+      update_config:
+        parallelism: 1
+    <% } else { %>
+    restart: always
+    <% } %>
 
 volumes:
   container_monitor:
